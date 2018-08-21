@@ -1,0 +1,14 @@
+h2 
+    = link_to '新規作成', new_post_path, class: 'header-menu'
+    My 記事一覧
+ul
+    - @posts.each do |post|
+        li 
+            = link_to post.title, post_path(post)
+            = link_to '[編集]', edit_post_path(post), class: 'command'
+            = link_to '[削除]',
+            post_path(post), 
+            method: :delete, 
+            class: 'command', 
+            data: {confirm: '本当によろしいですか?'}
+        

@@ -1,0 +1,19 @@
+h2 = @post.title
+p = simple_format @post.body
+
+h3 コメント
+- if @post.comments.any?
+  ul
+  - @post.comments.each do |comment|
+    li 
+        = comment.body
+        = link_to '[削除]',
+        post_comment_path(@post, comment),
+        method: :delete,
+        class: 'command',
+        data: {confirm: '本当によろしいですか?'}
+
+
+= form_for([@post, @post.comments.build]) do |f|
+    = f.text_field :body
+    = f.submit "コメント送信"
