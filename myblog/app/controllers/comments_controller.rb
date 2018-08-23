@@ -1,17 +1,20 @@
 class CommentsController < ApplicationController
 
-    def comment
-        post(:post_id)
-        @comment ||= @post.comments.find(params[:id])
+    def create
+        post
+        @comment = @post.comments.new(comment_params)
+        if @comment.save
+            redirect_to post_path(@post)
+            flash[:success] = "コメントを1件作成しました"
+        else
+            redirect_to post_path(@post)
+            flash[:error] = "コメントの作成に失敗しました"
+        end
     end
 
-    def create
-        post(:post_id)
-        if @post.comments.create(comment_params)
-            redirect_to post_path(@post)
-        else
-            render 'posts/show'
-        end
+    def show
+        comment
+        render 'edit'
     end
 
     def edit
@@ -22,8 +25,10 @@ class CommentsController < ApplicationController
         comment
         if @comment.update(comment_params)
             redirect_to post_path(@post)
+            flash[:success] = "コメントを1件更新しました"
         else
             render 'edit'
+            flash.now[:error] = "コメントの更新に失敗しました"
         end
     end
 
@@ -31,8 +36,10 @@ class CommentsController < ApplicationController
         comment
         if @comment.destroy
             redirect_to post_path(@post)
+            flash[:success] = "コメントを1件削除しました"
         else
-            render 'posts/show'
+            redirect_to post_path(@post)
+            flash[:error] = "コメントの削除に失敗しました"
         end
     end
 
@@ -40,5 +47,13 @@ class CommentsController < ApplicationController
     private
         def comment_params
             params.require(:comment).permit(:body)
+        end
+
+        def post
+            @post ||= Post.find(params[:post_id])
+        end
+    
+        def comment
+            @comment ||= post.comments.find(params[:id])
         end
 end
