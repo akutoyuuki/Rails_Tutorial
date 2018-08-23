@@ -18,13 +18,13 @@ class PostsController < ApplicationController
         # @post = Post.new(params[:post])
         # @post = Post.new(params.require(:post).permit(:title, :body))
         @post = Post.new(post_params)
-        if @post.save
+        if post.save
             # redirect
             redirect_to posts_path
             flash[:success] = "#{@post.title}を作成しました" 
         else
             # render plain: @post.errors.inspect
-            render 'new'
+            render :new
             flash.now[:error] = "新規記事の作成に失敗しました"
         end
     end
@@ -34,25 +34,22 @@ class PostsController < ApplicationController
     end
     
     def update
-        post
-        if @post.update(post_params)
+        if post.update(post_params)
             redirect_to posts_path
             flash[:success] = "#{@post.title}を更新しました"
         else
-            render 'edit'
+            render :edit
             flash.now[:error] = "記事の更新に失敗しました"
         end
     end
 
     def destroy
-        post
-        if @post.destroy
-            redirect_to posts_path
+        if post.destroy
             flash[:success] = "#{@post.title}を削除しました"
         else
-            render 'index'
-            flash.now[:error] = "記事の削除に失敗しました"
+            flash[:error] = "記事の削除に失敗しました"
         end
+        redirect_to posts_path
     end
 
 

@@ -18,7 +18,7 @@ h3 コメント
             = link_to '[削除]', post_comment_path(@post, comment), method: :delete, class: 'command', data: {confirm: '本当によろしいですか?'}
 
 
-= form_for([@post,(@comment = @post.comments.build)]) do |f|
+= form_with model: (@comment = @post.comments.new), url: post_comments_path(@post),local: true  do |f|
     p
         = f.text_field :body, placeholder: 'コメントを入力できます'
         - if @comment.errors.messages[:body].any?
