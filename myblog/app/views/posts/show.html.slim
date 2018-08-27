@@ -1,0 +1,28 @@
+- @page_title = @post.title
+
+h2
+    = @post.title
+p
+    =flash[:success]
+    =flash[:error]
+p
+    = simple_format @post.body
+
+h3 コメント
+- if @post.comments.any?
+    ul
+    - @post.comments.each do |comment|
+        li 
+            = comment.body
+            = link_to '[編集]', edit_post_comment_path(@post, comment), class: 'command'
+            = link_to '[削除]', post_comment_path(@post, comment), method: :delete, class: 'command', data: {confirm: '本当によろしいですか?'}
+
+
+= form_with model: (@comment = @post.comments.new), url: post_comments_path(@post),local: true  do |f|
+    p
+        = f.text_field :body, placeholder: 'コメントを入力できます'
+        - if @comment.errors.messages[:body].any?
+        span.error
+            = @comment.errors.messages[:body][0]
+    p
+        = f.submit
